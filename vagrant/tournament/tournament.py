@@ -18,7 +18,6 @@ def deleteMatches():
     cursor = DB.cursor()
 
     cursor.execute('DELETE FROM Matches;')
-    cursor.commit()
 
     cursor.close()
 
@@ -29,7 +28,6 @@ def deletePlayers():
     cursor = DB.cursor()
 
     cursor.execute('DELETE FROM Players;')
-    cursor.commit()
 
     cursor.close()
 
@@ -39,7 +37,12 @@ def countPlayers():
 
     cursor = DB.cursor()
 
-    cursor.execute('SELECT COUNT(*) DISTINCT FROM Players;')
+    count = cursor.execute('SELECT COUNT(*) FROM (SELECT DISTINCT PID FROM Players) AS temp;')
+
+    if count == 0:
+        return 0
+    else:
+        return count
 
     cursor.close()
 
@@ -119,61 +122,3 @@ def reportMatch(winner, loser):
 
     cursor.close()
  
-def swissPairings():
-    #Returns a list of pairs of players for the next round of a match.
-  
-    #Assuming that there are an even number of players registered, each player
-    #appears exactly once in the pairings.  Each player is paired with another
-    #player with an equal or nearly-equal win record, that is, a player adjacent
-    #to him or her in the standings.
-  
-    #Returns:
-    #  A list of tuples, each of which contains (id1, name1, id2, name2)
-    #    id1: the first player's unique id
-    #    name1: the first player's name
-    #    id2: the second player's unique id
-    #    name2: the second player's name
-
-    DB = DB.connect()
-    cursor = DB.cursor()
-    playersarray = []
-    matchesarray = []
-    roundarray = []
-
-    #get player info from players, and store in an array
-    cursor.execute('SELECT PID,NAME,WINS FROM Players ORDER BY WINS DESC')
-    playersarray = cursor.fetchall()
-
-    count = 0
-    while 
-
-
-    #get previous matches, and store in array
-    cursor.execute('SELECT * FROM Matches');
-    matchesarray = cursor.fetchall();
-
-    #randomize players and return matches (for help: http://stackoverflow.com/questions/7225906/forming-random-pairs-from-a-list-sort-of)
-    def player_matches (playersarray, matchesarray):
-        matches = list(matchesarray);
-
-        #where the players' wins are the same, put in separate arrays
-        #go through the arrays of players one at a time, randomize, check, re-randomize if needed, else push to roundarray
-
-
-        valid_match = false
-
-        while not valid_match:
-            random.shuffle(players)
-    
-    #function
-    #check new matches to matches table
-    #if matches have been played, return false
-    #/function
-
-    #if false, re-randomize
-    #repeat until matches are set
-    
-    #once matches are set, send PID1, Name1, PID2, Name2 to array, and commit to matches and player tables
-    #return array
-
-    return roundarray;
