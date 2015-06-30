@@ -5,24 +5,30 @@
 --
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
+CREATE DATABASE tournament;
 
+\c tournament;
 
-CREATE TABLE Players {
-	PID INT PRIMARY KEY NOT NULL autofill unsigned,
+CREATE TABLE Players (
+	PID SERIAL NOT NULL,
 	NAME CHAR(120) NOT NULL,
-	WINS INT unsigned,
-	LOSSES INT unsigned,
-}
+	WINS INT,
+	LOSSES INT,
+	CONSTRAINT pk_pid PRIMARY KEY (pid)
+);
 
-CREATE TABLE Matches {
-	MID INT PRIMARY KEY NOT NULL autofill unsigned,
+CREATE TABLE Matches (
+	MID SERIAL NOT NULL,
 --Commenting out for now. Worry about extra credit later
 	--TID INT FOREIGN KEY NOT NULL,
 --WinnerID stores PID from Participants Table
-	WinnerID INT FOREIGN KEY NOT NULL,
+	WinnerID INT NOT NULL,
 --LoserID stores PID from Participants Table
-	LoserID INT FOREIGN KEY NOT NULL,
-}
+	LoserID INT NOT NULL,
+	CONSTRAINT pk_mid PRIMARY KEY (mid),
+	CONSTRAINT fk_WinnerID FOREIGN KEY (WinnerID) REFERENCES Players (PID),
+	CONSTRAINT fk_LoserID FOREIGN KEY (LoserID) REFERENCES Players (PID)
+);
 
 --Commenting out for now. Worry about extra credit later
 --CREATE TABLE Tournaments {
@@ -31,3 +37,5 @@ CREATE TABLE Matches {
 --TournWinner stores PID of tournament winner from Participants Table
 --	TournWinner INT FOREIGN KEY
 --}
+
+\q
