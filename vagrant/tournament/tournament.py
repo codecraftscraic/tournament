@@ -5,7 +5,6 @@
 
 import psycopg2
 
-
 def connect():
     #Connect to the PostgreSQL database.  Returns a database connection.
     return psycopg2.connect("dbname=tournament")
@@ -37,12 +36,15 @@ def countPlayers():
 
     cursor = DB.cursor()
 
-    count = cursor.execute('SELECT COUNT(*) FROM (SELECT DISTINCT PID FROM Players) AS temp;')
+    cursor.execute('SELECT DISTINCT * FROM Players;')
 
-    if count == 0:
-        return 0
-    else:
-        return count
+    player_count = 0
+
+    for row in cursor:
+        cursor.fetchone()
+        player_count += 1
+
+    return player_count
 
     cursor.close()
 
@@ -54,11 +56,13 @@ def registerPlayer(name):
   
     #Args:
     #  name: the player's full name (need not be unique).
+
     DB = connect()
 
     cursor = DB.cursor()
 
     cursor.execute('INSERT INTO Players values (name);')
+
     cursor.commit()
 
     cursor.close()
