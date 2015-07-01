@@ -16,7 +16,7 @@ def deleteMatches():
 
     cursor = DB.cursor()
 
-    cursor.execute('DELETE FROM Matches;')
+    cursor.execute('TRUNCATE TABLE Matches;')
 
     DB.commit()
 
@@ -28,7 +28,7 @@ def deletePlayers():
 
     cursor = DB.cursor()
 
-    cursor.execute('DELETE FROM Players;')
+    cursor.execute('TRUNCATE TABLE Players CASCADE;')
 
     DB.commit()
 
@@ -61,7 +61,7 @@ def registerPlayer(name):
 
     cursor = DB.cursor()
 
-    cursor.execute('INSERT INTO Players (NAME) values (\'' + name + '\');')
+    cursor.execute('INSERT INTO Players (NAME, WINS, LOSSES) values (\'' + name + '\',0,0);')
 
     DB.commit()
 
@@ -80,14 +80,16 @@ def playerStandings():
     #    wins: the number of matches the player has won
     #    matches: the number of matches the player has played
     DB = connect()
-    playersarray = []
 
     cursor = DB.cursor()
     
-    playersarray = cursor.execute('SELECT *, (WINS + LOSSES) AS MATCHES FROM Players ORDER BY WINS ASC;')
+    cursor.execute('SELECT PID, NAME, WINS, (WINS + LOSSES) as MATCHES FROM Players ORDER BY WINS DESC;')
 
-    return playersarray
+    playersarray = cursor.fetchall()
+
     DB.close()
+    
+    return playersarray
 #6
 def reportMatch(winner, loser):
     #Records the outcome of a single match between two players.
@@ -99,8 +101,26 @@ def reportMatch(winner, loser):
 
     cursor = DB.cursor()
 
-    cursor.execute('INSERT INTO Matches (WinnerID, LoserID) values (' + winner + ',' + loser + ');')
+    cursor.execute('INSERT INTO Matches (WinnerID, LoserID) values (%d,%d);', (winner,loser))
     DB.commit()
 
     DB.close()
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
