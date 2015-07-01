@@ -9,7 +9,7 @@ def connect():
     #Connect to the PostgreSQL database.  Returns a database connection.
     return psycopg2.connect("dbname=tournament")
 
-
+#1
 def deleteMatches():
     #Remove all the match records from the database.
     DB = connect()
@@ -18,8 +18,10 @@ def deleteMatches():
 
     cursor.execute('DELETE FROM Matches;')
 
-    cursor.close()
+    DB.commit()
 
+    DB.close()
+#2
 def deletePlayers():
     #Remove all the player records from the database.
     DB = connect()
@@ -28,26 +30,24 @@ def deletePlayers():
 
     cursor.execute('DELETE FROM Players;')
 
-    cursor.close()
+    DB.commit()
 
+    DB.close()
+#3
 def countPlayers():
     #Returns the number of players currently registered.
     DB = connect()
 
     cursor = DB.cursor()
 
-    cursor.execute('SELECT DISTINCT * FROM Players;')
+    cursor.execute('SELECT COUNT(PID) FROM Players;')
 
-    player_count = 0
+    player_count = cursor.fetchall()
 
-    for row in cursor:
-        cursor.fetchone()
-        player_count += 1
+    DB.close()
 
-    return player_count
-
-    cursor.close()
-
+    return player_count[0][0]
+#4
 def registerPlayer(name):
     #Adds a player to the tournament database.
   
@@ -61,12 +61,12 @@ def registerPlayer(name):
 
     cursor = DB.cursor()
 
-    cursor.execute('INSERT INTO Players values (name);')
+    cursor.execute('INSERT INTO Players (NAME) values (\'' + name + '\');')
 
-    cursor.commit()
+    DB.commit()
 
-    cursor.close()
-
+    DB.close()
+#5
 def playerStandings():
     #Returns a list of the players and their win records, sorted by wins.
 
@@ -87,8 +87,8 @@ def playerStandings():
     playersarray = cursor.execute('SELECT *, (WINS + LOSSES) AS MATCHES FROM Players ORDER BY WINS ASC;')
 
     return playersarray
-    cursor.close()
-
+    DB.close()
+#6
 def reportMatch(winner, loser):
     #Records the outcome of a single match between two players.
 
@@ -96,33 +96,11 @@ def reportMatch(winner, loser):
     #  winner:  the id number of the player who won
     #  loser:  the id number of the player who lost
     DB = connect()
-    rows = []
 
     cursor = DB.cursor()
 
-    cursor.execute('INSERT INTO Matches values (' + winner + ',' + loser + ');')
-    cursor.commit()
+    cursor.execute('INSERT INTO Matches (WinnerID, LoserID) values (' + winner + ',' + loser + ');')
+    DB.commit()
 
-    cursor.execute('SELECT PID, WINS, LOSSES FROM Players WHERE PID = ' + winner + ' OR ' + loser + ';')
-    rows = cursor.fetchall()
-
-    #check returned PIDs against winner and loser IDs
-    if rows[0][0] == winner and rows[1][0] == loser:
-        wins = rows[0][1] + 1
-        cursor.execute('UPDATE Players WHERE PID = ' + winner + 'SET WINS = ' + wins + ';')
-        cursor.commit()
-
-        losses = rows[1][2] + 1
-        cursor.execute('UPDATE Players WHERE PID = ' + loser + 'SET LOSSES = ' + losses + ';')
-        cursor.commit()
-    else:
-        wins = rows[1][1] + 1
-        cursor.execute('UPDATE Players WHERE PID = ' + winner + 'SET WINS = ' + wins + ';')
-        cursor.commit()
-
-        losses = rows[0][2] + 1
-        cursor.execute('UPDATE Players WHERE PID = ' + loser + 'SET LOSSES = ' + losses + ';')
-        cursor.commit()
-
-    cursor.close()
+    DB.close()
  
