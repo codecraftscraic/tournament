@@ -9,7 +9,6 @@ def connect():
     #Connect to the PostgreSQL database.  Returns a database connection.
     return psycopg2.connect("dbname=tournament")
 
-#1
 def deleteMatches():
     #Remove all the match records from the database.
     DB = connect()
@@ -21,7 +20,7 @@ def deleteMatches():
     DB.commit()
 
     DB.close()
-#2
+
 def deletePlayers():
     #Remove all the player records from the database.
     DB = connect()
@@ -33,7 +32,7 @@ def deletePlayers():
     DB.commit()
 
     DB.close()
-#3
+
 def countPlayers():
     #Returns the number of players currently registered.
     DB = connect()
@@ -47,7 +46,7 @@ def countPlayers():
     DB.close()
 
     return player_count[0][0]
-#4
+
 def registerPlayer(name):
     #Adds a player to the tournament database.
   
@@ -66,7 +65,7 @@ def registerPlayer(name):
     DB.commit()
 
     DB.close()
-#5/6
+
 def playerStandings():
     #Returns a list of the players and their win records, sorted by wins.
 
@@ -90,7 +89,7 @@ def playerStandings():
     DB.close()
     
     return playersarray
-#7
+
 def reportMatch(winner, loser):
     #Records the outcome of a single match between two players.
 
@@ -127,7 +126,7 @@ def reportMatch(winner, loser):
         DB.commit()
 
     DB.close()
-#8
+
 def swissPairings():
     #Returns a list of pairs of players for the next round of a match.
   
@@ -143,50 +142,43 @@ def swissPairings():
     #    id2: the second player's unique id
     #    name2: the second player's name
 
-    #enumerate() may be helpful
+    DB = connect()
 
-    DB = DB.connect()
     cursor = DB.cursor()
-    playersarray = []
-    matchesarray = []
-    roundarray = []
 
-    #get player info from players, and store in an array
-    cursor.execute('SELECT PID,NAME,WINS FROM Players ORDER BY WINS DESC')
+    #get all the players, in standings order
+    cursor.execute('SELECT PID,NAME FROM Players ORDER BY WINS DESC')
+
     playersarray = cursor.fetchall()
 
-    #you can manipulate lists easier than tuples, fetchall returns list of tuples
+    DB.close()
 
-    count = 0
-    while 
+    i=0
+
+    matches = []
+
+    while i < len(playersarray):
+        player_one_pid = playersarray[i][0]
+        player_one_name = playersarray[i][1]
+        
+        player_two_pid = playersarray[i+1][0]
+        player_two_name = playersarray[i+1][1]
+
+        matches.append([player_one_pid,player_one_name,player_two_pid,player_two_name])
+
+        i += 2
+
+    return matches
 
 
-    #get previous matches, and store in array
-    cursor.execute('SELECT * FROM Matches');
-    matchesarray = cursor.fetchall();
-
-    #randomize players and return matches (for help: http://stackoverflow.com/questions/7225906/forming-random-pairs-from-a-list-sort-of)
-    def player_matches (playersarray, matchesarray):
-        matches = list(matchesarray);
-
-        #where the players' wins are the same, put in separate arrays
-        #go through the arrays of players one at a time, randomize, check, re-randomize if needed, else push to roundarray
 
 
-        valid_match = false
 
-        while not valid_match:
-            random.shuffle(players)
-    
-    #function
-    #check new matches to matches table
-    #if matches have been played, return false
-    #/function
 
-    #if false, re-randomize
-    #repeat until matches are set
-    
-    #once matches are set, send PID1, Name1, PID2, Name2 to array, and commit to matches and player tables
-    #return array
 
-    return roundarray;
+
+
+
+
+
+
