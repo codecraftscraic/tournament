@@ -5,20 +5,25 @@
 --
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
+
+DROP DATABASE IF EXISTS tournament;
+
 CREATE DATABASE tournament;
 
 \c tournament;
 
+DROP TABLE IF EXISTS Players CASCADE;
+
 CREATE TABLE Players (
-	PID SERIAL NOT NULL,
+	PID SERIAL,
 	NAME TEXT NOT NULL,
-	WINS INT,
-	LOSSES INT,
 	CONSTRAINT pk_pid PRIMARY KEY (pid)
 );
 
+DROP TABLE IF EXISTS Matches CASCADE;
+
 CREATE TABLE Matches (
-	MID SERIAL NOT NULL,
+	MID SERIAL,
 --WinnerID stores PID from Participants Table
 	WinnerID INT NOT NULL,
 --LoserID stores PID from Participants Table
@@ -28,4 +33,27 @@ CREATE TABLE Matches (
 	CONSTRAINT fk_LoserID FOREIGN KEY (LoserID) REFERENCES Players (PID)
 );
 
+DROP VIEW IF EXISTS Totals CASCADE;
+
+CREATE VIEW Totals (
+	SELECT Players.PID, Players.NAME, Matches.WinnerID, Matches.LoserID 
+	FROM Players, Matches WHERE;
+
+
+	SELECT PID,NAME from Players, WinnerID and LoserID from Matches. 
+	WHERE PID = WinnerID COUNT(WinnerID) AS WINS 
+	WHERE PID = WinnerID OR LoserID COUNT(WinnerID,LoserID) AS MATCH_COUNT
+);
+
 \q
+
+
+
+
+
+
+
+
+
+
+
