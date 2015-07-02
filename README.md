@@ -14,25 +14,25 @@ Execution
 
 Initialize the database/ensure it exists
 
-'''
+```
 vagrant@vagrant-ubuntu-trusty-32:~$ psql
 psql (9.3.9)
 Type "help" for help.
 
 vagrant=> \i tournament.sql
 vagrant=> \q
-'''
+```
 
 Change directories into the tournament folder
 
-'''
+```
 vagrant@vagrant-ubuntu-trusty-32:~$ cd /vagrant
 vagrant@vagrant-ubuntu-trusty-32:/vagrant$cd tournament
-'''
+```
 
 Run tournament_test.py
 
-'''
+```
 vagrant@vagrant-ubuntu-trusty-32:/vagrant/tournament$ python tournament_test.py
 1. Old matches can be deleted.
 2. Player records can be deleted.
@@ -43,4 +43,4 @@ vagrant@vagrant-ubuntu-trusty-32:/vagrant/tournament$ python tournament_test.py
 7. After a match, players have updated standings.
 8. After one match, players with one win are paired.
 Success!  All tests pass!
-''' 
+```
