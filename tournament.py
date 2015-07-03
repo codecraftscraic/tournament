@@ -43,7 +43,9 @@ def countPlayers():
 
     cursor = DB.cursor()
 
-    cursor.execute('SELECT COUNT(PID) FROM Players;')
+    query = 'SELECT COUNT(PID) FROM Players;'
+
+    cursor.execute(query)
 
     player_count = cursor.fetchall()
 
@@ -65,7 +67,10 @@ def registerPlayer(name):
 
     cursor = DB.cursor()
 
-    cursor.execute('INSERT INTO Players (NAME) values (%s);', (name,))
+    query = 'INSERT INTO Players (NAME) values (%s);'
+    param = (name,)
+
+    cursor.execute(query, param)
 
     DB.commit()
 
@@ -88,7 +93,9 @@ def playerStandings():
 
     cursor = DB.cursor()
 
-    cursor.execute('SELECT * FROM Totals ORDER BY WINS DESC;')
+    query = 'SELECT PID, NAME, TOTALWINS, (TOTALWINS + TOTALLOSSES) AS MATCHES FROM Totals ORDER BY TOTALWINS DESC;'
+
+    cursor.execute(query)
 
     playersarray = cursor.fetchall()
 
@@ -107,10 +114,10 @@ def reportMatch(winner, loser):
 
     cursor = DB.cursor()
 
-    insert_query = 'INSERT INTO Matches (WinnerID, LoserID) values (%s,%s);'
-    match_param = (winner, loser,)
+    query = 'INSERT INTO Matches (WinnerID, LoserID) values (%s,%s);'
+    param = (winner, loser,)
 
-    cursor.execute(insert_query, match_param)
+    cursor.execute(query, param)
 
     DB.commit()
 
@@ -137,7 +144,9 @@ def swissPairings():
     cursor = DB.cursor()
 
     # get all the players, in standings order
-    cursor.execute('SELECT PID,NAME FROM Players ORDER BY WINS DESC')
+    query = 'SELECT PID,NAME FROM Totals ORDER BY TOTALWINS DESC'
+
+    cursor.execute(query)
 
     playersarray = cursor.fetchall()
 

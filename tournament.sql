@@ -35,15 +35,11 @@ CREATE TABLE Matches (
 
 DROP VIEW IF EXISTS Totals CASCADE;
 
-CREATE VIEW Totals (
-	SELECT Players.PID, Players.NAME, Matches.WinnerID, Matches.LoserID 
-	FROM Players, Matches WHERE;
+CREATE VIEW Totals AS
 
-
-	SELECT PID,NAME from Players, WinnerID and LoserID from Matches. 
-	WHERE PID = WinnerID COUNT(WinnerID) AS WINS 
-	WHERE PID = WinnerID OR LoserID COUNT(WinnerID,LoserID) AS MATCH_COUNT
-);
+	SELECT PID,NAME, COUNT(WINS.*) AS TOTALWINS, COUNT(LOSSES.*) AS TOTALLOSSES 
+		FROM Players LEFT JOIN Matches AS WINS ON Players.PID = WINS.WinnerID 
+		LEFT JOIN Matches AS LOSSES ON Players.PID = LOSSES.LoserID GROUP BY PID;
 
 \q
 
