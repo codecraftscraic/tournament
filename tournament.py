@@ -93,7 +93,8 @@ def playerStandings():
 
     cursor = DB.cursor()
 
-    query = 'SELECT PID, NAME, TOTALWINS, (TOTALWINS + TOTALLOSSES) AS MATCHES FROM Totals ORDER BY TOTALWINS DESC;'
+    query = """SELECT PID, NAME, TOTALWINS, (TOTALWINS + TOTALLOSSES)
+                AS MATCHES FROM Totals ORDER BY TOTALWINS DESC;"""
 
     cursor.execute(query)
 
